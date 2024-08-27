@@ -1,0 +1,39 @@
+version: "3.8"
+name: gardenia
+services:
+  backend:
+    image: jsisques/gardenia-backend:v1.0.0
+    container_name: gardenia-backend
+    hostname: gardenia-backend
+    ports:
+      - "49153:49153"
+    environment:
+      MONGO_URI: mongodb://mongo:27017/gardenia
+      JWT_SECRET: javi
+      PORT: 49153
+    depends_on:
+      - mongo
+    restart: always
+
+  mongo:
+    image: mongo:latest
+    container_name: gardenia-mongodb
+    hostname: gardenia-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongodb:/data/db
+    restart: always
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: gardenia-mongo-express
+    hostname: gardenia-mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_PORT=27017
+    depends_on:
+      - mongo
+    restart: unless-stopped
