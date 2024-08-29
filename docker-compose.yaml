@@ -15,12 +15,26 @@ services:
       - mongo
     restart: always
 
+  frontend:
+    image: jsisques/gardenia-frontend:v1.0.0
+    container_name: gardenia-frontend
+    hostname: gardenia-frontend
+    ports:
+      - "8080:3000"
+    environment:
+      - NEXTAUTH_URL:http://localhost:3000
+      - NEXTAUTH_SECRET:your-secret
+      - NEXT_PUBLIC_BACKEND_URL:http://backend:49153/api/v1
+    depends_on:
+      - mongo
+    restart: always
+
   mongo:
     image: mongo:latest
     container_name: gardenia-mongodb
     hostname: gardenia-mongodb
     ports:
-      - "27017:27017"
+      - "31282:27017"
     volumes:
       - ./mongodb:/data/db
     restart: always
